@@ -25,22 +25,25 @@ export const SingleUser = async(req, res) =>{
     }
 }
 
-export const createUser = async(req, res) =>{
-    
-    try {
+export const createUser = async (req, res) => {
+  try {
+    const { first_name, last_name, contact, address, email, social_account } = req.body;
 
-        const {first_name , last_name , contact , address, email , social_account, image} = req.body;
+    const image = req.file ? req.file.filename : null;
 
-        const [data] = await db.query
-        ('INSERT INTO users (first_name , last_name , contact , address, email , social_account, image) VALUES ( ?,?,?,?,?,?,?)',
-        [first_name , last_name , contact , address, email , social_account, image]);
+    const [data] = await db.query(
+      `INSERT INTO users 
+      (first_name, last_name, contact, address, email, social_account, image) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [first_name, last_name, contact, address, email, social_account, image]
+    );
 
-        res.status(201).json(data)
-        
-    } catch (error) {
-        res.status(501).json({message: error.message})
-    }
-}
+    res.status(201).json({ message: "User created", data });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 export const UpdateUser = async (req ,res) =>{
