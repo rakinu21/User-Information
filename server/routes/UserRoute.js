@@ -11,6 +11,8 @@ router.post('/create', upload.single('image'), createUser);
 router.put('/users/:id',UpdateUser);
 router.delete('/users/:id',Deleteuser)
 
+
+
 export default router
 
 

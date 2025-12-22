@@ -1,8 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
-import { getAllUsers } from '../api/users.js';
+import { DeleteUser, getAllUsers } from '../api/users.js';
 import { useEffect } from 'react';
-
+import '../styles/User.scss'
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 export const Users = () => {
 
     const [users , setUsers] = useState([]);
@@ -23,6 +25,45 @@ export const Users = () => {
     }
 
 
+const handleDelete = async (id) => {
+  toast.info(
+    <div>
+      <p>Do you want to delete this user?</p>
+      <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+        <button
+          onClick={async () => {
+            try {
+              await DeleteUser(id);
+
+              setUsers((prev) =>
+                prev.filter((user) => user.id !== id)
+              );
+
+              toast.success("User deleted successfully!");
+              toast.info('')
+            } catch (error) {
+              toast.error("Failed to delete user");
+            }
+          }}
+          style={{ background: "black", color: "white", padding: "5px 10px" }}
+        >
+          Yes
+        </button>
+
+        <button
+          onClick={() => toast.dismiss()}
+          style={{ padding: "5px 10px" }}
+        >
+          No
+        </button>
+      </div>
+    </div>,
+    { autoClose: true}
+  );
+};
+
+
+
     useEffect(()=>{
 
         HandleUsers()
@@ -31,13 +72,17 @@ export const Users = () => {
   return (
     <div className='users'>
 
+        <div className="button-add">
+        <Link to={'/create'}><button>add</button></Link>
+        </div>
+
         {
             users && users.length > 0 ? 
             
             users.map((userItem, index) =>{
 
                 return (
-                    <div className="container-user">
+                    <div className="container-user" key={userItem.id}>
 
                         <div className="left">
                             <img src={userItem.image} alt="image" />
@@ -48,7 +93,7 @@ export const Users = () => {
                                  <h1>{userItem.first_name}</h1>
                                  <h2>{userItem.last_name}</h2>
                             </div>
-                            <div className="information">
+                            
                                   
                                   <ul>
                                     <li>
@@ -65,8 +110,13 @@ export const Users = () => {
                                     </li>
                                   </ul>
 
+                                  <div className="button">
+                                    <button className="delete"  onClick={()=> handleDelete(userItem.id)}>Delete</button>
+                                     <button className="delete">update</button>
+                                  </div>
+
                                   <p>{userItem.created_at}</p>
-                            </div>
+                            
                         </div>
                     </div>
                 )
