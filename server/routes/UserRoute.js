@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/users',allUser);
 router.get('/users/:id', SingleUser);
 router.post('/create', upload.single('image'), createUser);
-router.put('/users/:id',UpdateUser);
+router.put('/users/:id', upload.single("image"), UpdateUser);
 router.delete('/users/:id',Deleteuser)
 
 

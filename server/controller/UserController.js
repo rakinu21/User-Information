@@ -47,25 +47,52 @@ export const createUser = async (req, res) => {
 };
 
 
-export const UpdateUser = async (req ,res) =>{
+export const UpdateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    try {
-        const {id} = req.params;
-        
-        const {first_name , last_name , contact , address, email , social_account, image} = req.body;
-        const [data] = await db.query(`
-    UPDATE users SET
-    first_name=?, last_name=?, contact=?, address=?, email=?, social_account=?, image=?
-    WHERE id=?
-  `,
-     [first_name , last_name , contact , address, email , social_account, image , id]
-        )
+    const {
+      first_name,
+      last_name,
+      contact,
+      address,
+      email,
+      social_account,
+    } = req.body;
 
-        res.status(201).json({message :"updated successfully"})
-    } catch (error) {
-        res.status(501).json({message: error.message})
-    }
-}
+    // ✅ get image from multer
+    const image = req.file ? req.file.filename : null;
+
+    await db.query(
+      `
+      UPDATE users SET
+        first_name = ?,
+        last_name = ?,
+        contact = ?,
+        address = ?,
+        email = ?,
+        social_account = ?,
+        image = COALESCE(?, image)
+      WHERE id = ?
+      `,
+      [
+        first_name,
+        last_name,
+        contact,
+        address,
+        email,
+        social_account,
+        image,
+        id,
+      ]
+    );
+
+    res.status(200).json({ message: "Updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 
 export const Deleteuser = async (req, res) => {

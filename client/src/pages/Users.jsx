@@ -4,11 +4,12 @@ import { DeleteUser, getAllUsers } from '../api/users.js';
 import { useEffect } from 'react';
 import '../styles/User.scss'
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 export const Users = () => {
 
     const [users , setUsers] = useState([]);
     
+    const navigate = useNavigate()
 
     const HandleUsers = async() =>{
 
@@ -69,6 +70,15 @@ const handleDelete = async (id) => {
         HandleUsers()
     },[])
 
+
+
+    const handleUpdate = (id) =>{
+
+       
+          return navigate(`/update/${id}`)
+       
+    }
+
   return (
     <div className='users'>
 
@@ -112,7 +122,7 @@ const handleDelete = async (id) => {
 
                                   <div className="button">
                                     <button className="delete"  onClick={()=> handleDelete(userItem.id)}>Delete</button>
-                                     <button className="delete">update</button>
+                                     <button className="update" onClick={()=> handleUpdate(userItem.id)}>update</button>
                                   </div>
 
                                   <p>{userItem.created_at}</p>

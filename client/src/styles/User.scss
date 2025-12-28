@@ -29,21 +29,20 @@
         align-items: center;
         justify-content: space-around;
         flex-wrap: wrap;
-        border: 2px solid red;
+      
 
         &:nth-child(2n +1){
             flex-direction: row-reverse;
         }
 
         .left{
-          
-            border: 2px solid red;
+        
             
             img{
               
                 width: 300px;
                 height: 300px;
-                border: 2px solid red;
+              
                 object-fit: cover top;
             }
         }
